@@ -22,6 +22,8 @@ final class ShoppingViewController: UIViewController {
         tf.placeholder = "무엇을 구매하실건가요?"
         tf.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
         tf.leftViewMode = .always
+        tf.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 80, height: 0))
+        tf.rightViewMode = .always
         tf.backgroundColor = .systemGray6
         tf.layer.cornerRadius = 12
         return tf
