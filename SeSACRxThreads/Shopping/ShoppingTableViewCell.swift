@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 
 final class ShoppingTableViewCell: UITableViewCell {
     static let identifier = "ShoppingTableViewCell"
@@ -16,10 +17,13 @@ final class ShoppingTableViewCell: UITableViewCell {
         var config = UIButton.Configuration.plain()
         config.image = UIImage(systemName: "checkmark.square")
         button.configuration = config
+        button.tintColor = .black
         return button
     }()
     let contentLabel = {
         let label = UILabel()
+        label.numberOfLines = 1
+        label.lineBreakMode = .byTruncatingTail
         return label
     }()
     let starButton = {
@@ -27,8 +31,11 @@ final class ShoppingTableViewCell: UITableViewCell {
         var config = UIButton.Configuration.plain()
         config.image = UIImage(systemName: "star")
         button.configuration = config
+        button.tintColor = .black
         return button
     }()
+    
+    var disposeBag = DisposeBag()
      
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -41,6 +48,10 @@ final class ShoppingTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
      
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        disposeBag = DisposeBag()
+    }
     
     private func configure() {
         contentView.layer.cornerRadius = 12
@@ -53,20 +64,30 @@ final class ShoppingTableViewCell: UITableViewCell {
         
         checkButton.snp.makeConstraints { make in
             make.verticalEdges.equalToSuperview().inset(12)
-            make.leading.equalToSuperview().inset(20)
-            make.width.height.equalTo(32)
-        }
-        
-        contentLabel.snp.makeConstraints { make in
-            make.verticalEdges.equalToSuperview().inset(12)
-            make.leading.equalTo(checkButton.snp.trailing).offset(20)
+            make.leading.equalToSuperview().inset(12)
         }
         
         starButton.snp.makeConstraints { make in
             make.verticalEdges.equalToSuperview().inset(12)
-            make.trailing.equalToSuperview().inset(20)
-            make.width.height.equalTo(32)
+            make.trailing.equalToSuperview().inset(12)
+            make.width.equalTo(40)
         }
+        
+        contentLabel.snp.makeConstraints { make in
+            make.verticalEdges.equalToSuperview().inset(12)
+            make.leading.equalTo(checkButton.snp.trailing).offset(12)
+            make.trailing.lessThanOrEqualTo(starButton.snp.leading)
+        }
+    }
+    
+    func configureCell(_ value: Shopping) {
+        checkButton.configuration?.image = value.isComplete ? UIImage(systemName: "checkmark.square.fill") : UIImage(systemName: "checkmark.square")
+        
+        starButton.configuration?.image = value.isLike ? UIImage(systemName: "star.fill") : UIImage(systemName: "star")
+        
+        contentLabel.text = value.title
+        contentLabel.preferredMaxLayoutWidth = contentLabel.frame.width
+        contentView.layoutIfNeeded()
     }
 }
 

@@ -7,6 +7,14 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
+
+struct Shopping {
+    var isComplete: Bool
+    let title: String
+    var isLike: Bool
+}
 
 final class ShoppingViewController: UIViewController {
     private let inputTextField = {
@@ -32,15 +40,48 @@ final class ShoppingViewController: UIViewController {
     private let tableView = {
         let view = UITableView()
         view.register(ShoppingTableViewCell.self, forCellReuseIdentifier: ShoppingTableViewCell.identifier)
-        view.rowHeight = 44
+        view.rowHeight = 52
         return view
     }()
+    
+    var list = BehaviorRelay<[Shopping]>(value: [])
+    let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureNavigation()
         configureView()
+        bind()
+    }
+    
+    func bind() {
+        list
+            .bind(to: tableView.rx.items(cellIdentifier: ShoppingTableViewCell.identifier, cellType: ShoppingTableViewCell.self)) { (row, element, cell) in
+                cell.configureCell(element)
+                
+                cell.checkButton.rx.tap
+                    .bind(with: self) { owner, _ in
+                        var new = owner.list.value
+                        new[row].isComplete.toggle()
+                        owner.list.accept(new)
+                    }.disposed(by: cell.disposeBag)
+                
+                cell.starButton.rx.tap
+                    .bind(with: self) { owner, _ in
+                        var new = owner.list.value
+                        new[row].isLike.toggle()
+                        owner.list.accept(new)
+                    }.disposed(by: cell.disposeBag)
+            }.disposed(by: disposeBag)
+        
+        addButton.rx.tap
+            .withLatestFrom(inputTextField.rx.text.orEmpty)
+            .bind(with: self) { owner, newValue in
+                let new = Shopping(isComplete: false, title: newValue, isLike: false)
+                let newList = owner.list.value + [new]
+                owner.list.accept(newList)
+            }.disposed(by: disposeBag)
     }
     
     func configureNavigation() {
