@@ -46,7 +46,7 @@ final class ShoppingViewController: UIViewController {
         return view
     }()
     
-    var list = BehaviorRelay<[Shopping]>(value: [])
+    let viewModel = ShoppingViewModel()
     let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
@@ -58,31 +58,29 @@ final class ShoppingViewController: UIViewController {
     }
     
     func bind() {
-        list
+        let addBtnTap = addButton.rx.tap
+            .withLatestFrom(inputTextField.rx.text.orEmpty)
+        let checkBtnTap = BehaviorRelay(value: 0)
+        let starBtnTap = BehaviorRelay(value: 0)
+        let input = ShoppingViewModel
+            .Input(addBtnTap: addBtnTap.asObservable(),
+                   checkBtnTap: checkBtnTap.asObservable().skip(1),
+                   starBtnTap: starBtnTap.asObservable().skip(1))
+        let output = viewModel.transform(input: input)
+        
+        viewModel.list
             .bind(to: tableView.rx.items(cellIdentifier: ShoppingTableViewCell.identifier, cellType: ShoppingTableViewCell.self)) { (row, element, cell) in
                 cell.configureCell(element)
                 
                 cell.checkButton.rx.tap
-                    .bind(with: self) { owner, _ in
-                        var new = owner.list.value
-                        new[row].isComplete.toggle()
-                        owner.list.accept(new)
-                    }.disposed(by: cell.disposeBag)
+                    .map { row }
+                    .bind(to: checkBtnTap)
+                    .disposed(by: cell.disposeBag)
                 
                 cell.starButton.rx.tap
-                    .bind(with: self) { owner, _ in
-                        var new = owner.list.value
-                        new[row].isLike.toggle()
-                        owner.list.accept(new)
-                    }.disposed(by: cell.disposeBag)
-            }.disposed(by: disposeBag)
-        
-        addButton.rx.tap
-            .withLatestFrom(inputTextField.rx.text.orEmpty)
-            .bind(with: self) { owner, newValue in
-                let new = Shopping(isComplete: false, title: newValue, isLike: false)
-                let newList = owner.list.value + [new]
-                owner.list.accept(newList)
+                    .map { row }
+                    .bind(to: starBtnTap)
+                    .disposed(by: cell.disposeBag)
             }.disposed(by: disposeBag)
     }
     
