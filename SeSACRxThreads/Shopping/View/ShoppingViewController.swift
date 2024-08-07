@@ -98,6 +98,11 @@ final class ShoppingViewController: UIViewController {
             .bind(to: collectionView.rx.items(cellIdentifier: KeywordCollectionViewCell.identifier, cellType: KeywordCollectionViewCell.self)) { (row, element, cell) in
                 cell.label.text = element
             }.disposed(by: disposeBag)
+        
+        output.resetInputText
+            .bind(with: self) { owner, _ in
+                owner.inputTextField.text = ""
+            }.disposed(by: disposeBag)
     }
     
     func configureNavigation() {

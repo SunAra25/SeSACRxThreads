@@ -23,15 +23,18 @@ class ShoppingViewModel {
     }
     
     struct Output {
-        let updateList: BehaviorRelay<[Shopping]>
+        let resetInputText: PublishRelay<Void>
     }
     
     func transform(input: Input) -> Output {
+        let resetInputText = PublishRelay<Void>()
+        
         input.addBtnTap
             .bind(with: self) { owner, value in
                 var newList = owner.keywordList.value
-                newList.append(value)
+                newList.insert(value, at: 0)
                 owner.keywordList.accept(newList)
+                resetInputText.accept(())
             }.disposed(by: disposeBag)
         
         input.checkBtnTap
@@ -56,6 +59,6 @@ class ShoppingViewModel {
                 owner.list.accept(newList)
             }.disposed(by: disposeBag)
         
-        return Output(updateList: list)
+        return Output(resetInputText: resetInputText)
     }
 }
