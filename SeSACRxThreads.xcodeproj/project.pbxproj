@@ -34,6 +34,7 @@
 		C03031C02C5F3AD900555BAF /* ShoppingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03031BF2C5F3AD900555BAF /* ShoppingViewController.swift */; };
 		C03031C22C5F3E7C00555BAF /* ShoppingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03031C12C5F3E7C00555BAF /* ShoppingTableViewCell.swift */; };
 		C0B11D1D2C60C89D007F8078 /* ShoppingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B11D1C2C60C89D007F8078 /* ShoppingViewModel.swift */; };
+		C0DAE4E42C635F0F0025054F /* KeywordCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DAE4E32C635F0F0025054F /* KeywordCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +83,7 @@
 		C03031BF2C5F3AD900555BAF /* ShoppingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingViewController.swift; sourceTree = "<group>"; };
 		C03031C12C5F3E7C00555BAF /* ShoppingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingTableViewCell.swift; sourceTree = "<group>"; };
 		C0B11D1C2C60C89D007F8078 /* ShoppingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingViewModel.swift; sourceTree = "<group>"; };
+		C0DAE4E32C635F0F0025054F /* KeywordCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -230,6 +232,7 @@
 			children = (
 				C03031BF2C5F3AD900555BAF /* ShoppingViewController.swift */,
 				C03031C12C5F3E7C00555BAF /* ShoppingTableViewCell.swift */,
+				C0DAE4E32C635F0F0025054F /* KeywordCollectionViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -383,6 +386,7 @@
 			files = (
 				041280782AF1D14000972552 /* Resource.swift in Sources */,
 				0412806F2AEFAD2D00972552 /* BirthdayViewController.swift in Sources */,
+				C0DAE4E42C635F0F0025054F /* KeywordCollectionViewCell.swift in Sources */,
 				041280652AEFA2F000972552 /* SignTextField.swift in Sources */,
 				0412806C2AEFABFE00972552 /* PasswordViewController.swift in Sources */,
 				041280562AEFA04800972552 /* SignInViewController.swift in Sources */,

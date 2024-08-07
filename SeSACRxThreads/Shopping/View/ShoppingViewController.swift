@@ -45,6 +45,15 @@ final class ShoppingViewController: UIViewController {
         view.rowHeight = 52
         return view
     }()
+    private let collectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.sectionInset = .init(top: 12, left: 16, bottom: 12, right: 16)
+        layout.estimatedItemSize = CGSize(width: 80, height: 40)
+        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        view.register(KeywordCollectionViewCell.self, forCellWithReuseIdentifier: KeywordCollectionViewCell.identifier)
+        return view
+    }()
     
     let viewModel = ShoppingViewModel()
     let disposeBag = DisposeBag()
@@ -93,6 +102,7 @@ final class ShoppingViewController: UIViewController {
         
         view.addSubview(inputTextField)
         view.addSubview(addButton)
+        view.addSubview(collectionView)
         view.addSubview(tableView)
         
         inputTextField.snp.makeConstraints { make in
@@ -107,10 +117,15 @@ final class ShoppingViewController: UIViewController {
             make.height.equalTo(32)
         }
         
+        collectionView.snp.makeConstraints { make in
+            make.top.equalTo(inputTextField.snp.bottom)
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(64)
+        }
+        
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(inputTextField.snp.bottom).offset(16)
+            make.top.equalTo(collectionView.snp.bottom)
             make.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
         }
     }
-
 }
