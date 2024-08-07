@@ -71,10 +71,12 @@ final class ShoppingViewController: UIViewController {
             .withLatestFrom(inputTextField.rx.text.orEmpty)
         let checkBtnTap = BehaviorRelay(value: 0)
         let starBtnTap = BehaviorRelay(value: 0)
+        let keywordBtnTap = collectionView.rx.modelSelected(String.self)
         let input = ShoppingViewModel
             .Input(addBtnTap: addBtnTap.asObservable(),
                    checkBtnTap: checkBtnTap.asObservable().skip(1),
-                   starBtnTap: starBtnTap.asObservable().skip(1))
+                   starBtnTap: starBtnTap.asObservable().skip(1),
+                   keywordBtnTap: keywordBtnTap.asObservable())
         let output = viewModel.transform(input: input)
         
         viewModel.list
@@ -90,6 +92,11 @@ final class ShoppingViewController: UIViewController {
                     .map { row }
                     .bind(to: starBtnTap)
                     .disposed(by: cell.disposeBag)
+            }.disposed(by: disposeBag)
+        
+        viewModel.keywordList
+            .bind(to: collectionView.rx.items(cellIdentifier: KeywordCollectionViewCell.identifier, cellType: KeywordCollectionViewCell.self)) { (row, element, cell) in
+                cell.label.text = element
             }.disposed(by: disposeBag)
     }
     

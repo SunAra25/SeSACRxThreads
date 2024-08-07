@@ -11,6 +11,7 @@ import RxCocoa
 
 class ShoppingViewModel {
     let list = BehaviorRelay<[Shopping]>(value: [])
+    let keywordList = BehaviorRelay<[String]>(value: [])
     
     let disposeBag = DisposeBag()
     
@@ -18,6 +19,7 @@ class ShoppingViewModel {
         let addBtnTap: Observable<String>
         let checkBtnTap: Observable<Int>
         let starBtnTap: Observable<Int>
+        let keywordBtnTap: Observable<String>
     }
     
     struct Output {
@@ -27,10 +29,9 @@ class ShoppingViewModel {
     func transform(input: Input) -> Output {
         input.addBtnTap
             .bind(with: self) { owner, value in
-                var newList = owner.list.value
-                let newValue = Shopping(isComplete: false, title: value, isLike: false)
-                newList.append(newValue)
-                owner.list.accept(newList)
+                var newList = owner.keywordList.value
+                newList.append(value)
+                owner.keywordList.accept(newList)
             }.disposed(by: disposeBag)
         
         input.checkBtnTap
@@ -46,6 +47,15 @@ class ShoppingViewModel {
                 newList[index].isLike.toggle()
                 owner.list.accept(newList)
             }.disposed(by: disposeBag)
+        
+        input.keywordBtnTap
+            .bind(with: self) { owner, value in
+                var newList = owner.list.value
+                let newValue = Shopping(isComplete: false, title: value, isLike: false)
+                newList.append(newValue)
+                owner.list.accept(newList)
+            }.disposed(by: disposeBag)
+        
         return Output(updateList: list)
     }
 }
